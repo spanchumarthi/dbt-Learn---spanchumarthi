@@ -4,4 +4,4 @@ select
     order_date,
     status
 
-from raw.jaffle_shop.orders limit 10
+from raw.jaffle_shop.orders
