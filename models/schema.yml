@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: customers
+  - name : stg_orders
+  - name : stg_customers
+  
