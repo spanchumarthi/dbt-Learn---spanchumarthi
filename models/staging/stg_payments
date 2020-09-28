@@ -1,0 +1,4 @@
+select orderid, 
+       id as customer_id,
+       amount
+from raw.stripe.payment
