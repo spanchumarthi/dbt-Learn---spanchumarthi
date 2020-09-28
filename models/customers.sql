@@ -4,30 +4,27 @@ with customers as (
 
 ),
 
-orders as (
+jaff_orders as (
 
     select * from {{ ref('stg_orders') }}
 
 ),
 
 payments as (
-
-    select * from {{ ref('stg_payments') }}
-
+     select * from {{ ref('orders') }}
 ),
 
 customer_orders as (
 
     select
-        customer_id,
-
-        min(order_date) as first_order_date,
-        max(order_date) as most_recent_order_date,
-        count(order_id) as number_of_orders,
-        sum(coalesce(payment,0)) as payment
-
-    from orders
-    left join payments using (customer_id)
+        jaff_orders.customer_id,
+        min(jaff_orders.order_date) as first_order_date,
+        max(jaff_orders.order_date) as most_recent_order_date,
+        count(jaff_orders.order_id) as number_of_orders,
+        sum(payments.payment) as lifetime_value
+        
+    from jaff_orders
+    left join payments on jaff_orders.order_id = payments.order_id 
     group by 1
 
 ),
@@ -41,7 +38,8 @@ final as (
         customers.last_name,
         customer_orders.first_order_date,
         customer_orders.most_recent_order_date,
-        coalesce(customer_orders.number_of_orders, 0) as number_of_orders
+        coalesce(customer_orders.number_of_orders, 0) as number_of_orders,
+        customer_orders.lifetime_value
 
     from customers
 
