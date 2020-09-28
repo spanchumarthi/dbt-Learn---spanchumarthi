@@ -1,5 +1,6 @@
 select 
     orderid, 
     id as customer_id,
-    sum(amount) as payment
+    amount as payment
 from raw.stripe.payment
+where status = 'success'
